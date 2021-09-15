@@ -11,7 +11,23 @@ public class Vec2i {
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return String.format("(%d, %d)", x, y);
+        return String.format("%d, %d", x, y);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (obj.getClass() != getClass())
+            return false;
+
+        Vec2i rhs = (Vec2i) obj;
+        return this.x == rhs.x && this.y == rhs.y;
     }
 }

@@ -22,7 +22,6 @@ public class ApplicationMain {
             System.exit(1);
         }
         
-        gameOfLife.tick(coordinates);
-        gameOfLife.displayCurrentState();
+        gameOfLife.tick(coordinates).stream().forEach(System.out::println);
     }
 }
