@@ -1,4 +1,4 @@
-package com.makkajai.dev.challenge.ds;
+package com.makkajai.dev.challenge.ds.planar;
 
 public class Vec2i {
     public int x;
