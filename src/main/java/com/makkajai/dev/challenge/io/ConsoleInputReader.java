@@ -18,7 +18,7 @@ public class ConsoleInputReader implements Closeable {
 
         List<String> input = new ArrayList<>();
         while (true) {
-            String line = reader.readLine().trim();
+            String line = reader.readLine();
             if (line.isBlank()) break;
             input.add(line);
         }

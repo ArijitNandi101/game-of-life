@@ -3,3 +3,6 @@ target
 .project
 .settings/
 .vscode
+.settings
+.apt_generated*
+.factorypath

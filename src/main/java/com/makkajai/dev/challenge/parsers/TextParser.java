@@ -14,8 +14,10 @@ public class TextParser {
     public static List<Vec2i> parseCoordinates(List<String> rawCoordinateStrings) throws IOException {
         return rawCoordinateStrings.stream()
             .map(rawCoordinateString -> rawCoordinateString.split("\\s*,\\s*"))
-            .map(tokens -> new Vec2i(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1])))
-            .collect(Collectors.toList());
+            .map(tokens -> new Vec2i(
+                Integer.parseInt(tokens[0].trim()), 
+                Integer.parseInt(tokens[1].trim()))
+            ).collect(Collectors.toList());
     }
     
 }
