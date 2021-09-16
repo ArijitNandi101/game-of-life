@@ -10,8 +10,14 @@ import com.makkajai.dev.challenge.parsers.TextParser;
 
 import lombok.extern.java.Log;
 
+/**
+ * This is the entry point class. It reads and parses input from the console, 
+ * initializes a {@link Simulator} with the seed and ticks once to get the new
+ * locations of alive entities in the Game of Life. It then displays the result
+ * in the console.
+ */
 @Log
-public class ApplicationMain {
+ public class ApplicationMain {
     public static void main( String[] args )
     {
 
@@ -20,16 +26,19 @@ public class ApplicationMain {
         Simulator gameOfLife = new Simulator();
         List<Vec2i> coordinates = null;
         
+        // read input from the console and parse the seed coordinates
         try (ConsoleInputReader consoleInputReader = new ConsoleInputReader()) {
             System.out.println("enter seed coordinates:");
             List<String> rawCoordStrings = consoleInputReader.read();
 
             coordinates = TextParser.parseCoordinates(rawCoordStrings);
         } catch(IOException | NumberFormatException e) {
+            // exits on Input failure
             LOG.log(Level.SEVERE, e.getMessage(), e);
             System.exit(1);
         }
         
+        // ticks (updates) the world once and displays the new alive entity coordinates
         gameOfLife.tick(coordinates).stream().forEach(System.out::println);
     }
 }
