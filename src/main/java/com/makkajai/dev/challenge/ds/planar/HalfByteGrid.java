@@ -3,10 +3,10 @@ package com.makkajai.dev.challenge.ds.planar;
 import java.util.function.Function;
 
 public class HalfByteGrid {
-    private Vec2i size = new Vec2i(0, 0);
+    private Vec2i size = new Vec2i();
     private char[][] cells; 
 
-    public void reset() {
+    public void clear() {
         cells = null;
     }
 

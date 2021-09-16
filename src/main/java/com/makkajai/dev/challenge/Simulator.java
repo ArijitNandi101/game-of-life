@@ -2,90 +2,106 @@ package com.makkajai.dev.challenge;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import com.makkajai.dev.challenge.ds.planar.HalfByteGrid;
 import com.makkajai.dev.challenge.ds.planar.Vec2i;
 
+import lombok.Getter;
+import lombok.extern.java.Log;
+
+@Log
 public class Simulator {
 
-    private Vec2i topLeft = new Vec2i(Integer.MAX_VALUE, Integer.MAX_VALUE);
-    private Vec2i bottomRight = new Vec2i(Integer.MIN_VALUE, Integer.MIN_VALUE);
+    @Getter
+    private Vec2i topLeft = new Vec2i();
 
-    HalfByteGrid grid = new HalfByteGrid();
+    @Getter
+    private Vec2i bottomRight = new Vec2i();
 
-    public HashSet<Vec2i> tick(List<Vec2i> seed) {
-        grid.reset();
+    private HalfByteGrid grid = new HalfByteGrid();
+
+    public List<Vec2i> tick(List<Vec2i> seed) {
+
+        grid.clear();
+
+        topLeft.x = topLeft.y = Integer.MAX_VALUE;
+        bottomRight.x = bottomRight.y = Integer.MIN_VALUE;
 
         for(Vec2i entityPosition: seed) {
             this.expandBounds(entityPosition);
         }
         grid.createGrid(bottomRight.x - topLeft.x + 1, bottomRight.y - topLeft.y + 1);
 
-        for (Vec2i entityPosition : seed) {
-            grid.setCellDescriptor(entityPosition.x - topLeft.x, entityPosition.y - topLeft.y, 8);
-        }
-        for (Vec2i entityPosition : seed) {
-            this.updateNeighbours(entityPosition);
-        }
-        return getAliveEntities(seed);
-    }
-
-    public void expandBounds(Vec2i entityPosition) {
-        topLeft = new Vec2i(Math.min(topLeft.x, entityPosition.x - 1), Math.min(topLeft.y, entityPosition.y - 1));
-        bottomRight = new Vec2i(Math.max(bottomRight.x, entityPosition.x + 1),
-                Math.max(bottomRight.y, entityPosition.y + 1));
-    }
-
-    public void updateNeighbours(Vec2i entityPosition) {
-        int y_coord = entityPosition.y - topLeft.y;
-        int x_coord = entityPosition.x - topLeft.x;
-        int self_descriptor = grid.getCellDescriptor(x_coord, y_coord);
-        for (int i = -1; i < 2; ++i) {
-            for (int j = -1; j < 2; ++j) {
-                if (i == 0 && j == 0)
-                    continue;
-                int neighbour_descriptor = grid.getCellDescriptor(x_coord + j, y_coord + i);
-
-                if ((neighbour_descriptor >> 3) == 1) {
-                    if ((self_descriptor & 3) == 3) {
-                        self_descriptor = 0xB;
-                    } else {
-                        if ((self_descriptor & 3) != 0) {
-                            self_descriptor |= 4;
-                        }
-                        self_descriptor++;
-                    }
-                } else {
-                    if ((neighbour_descriptor & 3) == 3) {
-                        neighbour_descriptor = 3;
-                    } else if ((neighbour_descriptor & 3) == 2) {
-                        neighbour_descriptor = 7;
-                    } else {
-                        neighbour_descriptor++;
-                    }
-                    grid.setCellDescriptor(x_coord + j, y_coord + i, neighbour_descriptor);
-                }
-            }
-        }
-        grid.setCellDescriptor(x_coord, y_coord, self_descriptor);
-    }
-
-    public HashSet<Vec2i> getAliveEntities(List<Vec2i> entityPositions) {
-        HashSet<Vec2i> aliveEntities = new HashSet<>();
+        seed.parallelStream().forEach(entityPosition -> 
+            grid.setCellDescriptor(entityPosition.x - topLeft.x, entityPosition.y - topLeft.y, 8)
+        );
         
-        for (Vec2i position: entityPositions) {
-            int y_coord = position.y - topLeft.y;
-            int x_coord = position.x - topLeft.x;
+        seed.stream().forEach(this::updateNeighbours);
+        return getAliveEntities(seed).stream().collect(Collectors.toList());
+    }
 
-            for (int i = -1; i < 2; ++i) {
-                for (int j = -1; j < 2; ++j) {
-                    int cell_descriptor = grid.getCellDescriptor(x_coord + j, y_coord + i);
-                    if ((cell_descriptor & 4) > 0) {
-                        aliveEntities.add(new Vec2i(x_coord + j + topLeft.x, y_coord + i + topLeft.y));
-                    }
+    void expandBounds(Vec2i entityPosition) {
+        topLeft = new Vec2i(Math.min(topLeft.x, entityPosition.x - 1), Math.min(topLeft.y, entityPosition.y - 1));
+        bottomRight = new Vec2i(Math.max(bottomRight.x, entityPosition.x + 1),Math.max(bottomRight.y, entityPosition.y + 1));
+    }
+
+    int updateSelfDescriptor(int self_descriptor) {
+        if ((self_descriptor & 3) == 3) {
+            return 0xB;
+        } else {
+            if ((self_descriptor & 3) != 0) {
+                self_descriptor |= 4;
+            }
+            return self_descriptor + 1;
+        }
+    }
+
+    int updateNeighbourDescriptor(int neighbour_descriptor) {
+        if ((neighbour_descriptor & 3) == 3) {
+            return 3;
+        } else if ((neighbour_descriptor & 3) == 2) {
+            return 7;
+        } else {
+            return neighbour_descriptor + 1;
+        }
+    }
+
+    void updateNeighbours(Vec2i entityPosition) {
+        Vec2i coords = entityPosition.subtract(topLeft);
+        int self_descriptor = grid.getCellDescriptor(coords.x, coords.y);
+        for (int y_offset = -1; y_offset < 2; ++y_offset) {
+            for (int x_offset = -1; x_offset < 2; ++x_offset) {
+                if (y_offset == 0 && x_offset == 0) continue;
+                int neighbour_descriptor = grid.getCellDescriptor(coords.x + x_offset, coords.y + y_offset);
+                if ((neighbour_descriptor >> 3) == 1) {
+                    self_descriptor =  updateSelfDescriptor(self_descriptor);
+                } else {
+                    grid.setCellDescriptor(
+                        coords.x + x_offset, 
+                        coords.y + y_offset, 
+                        updateNeighbourDescriptor(neighbour_descriptor)
+                    );
                 }
             }
         }
-        return aliveEntities;
+        grid.setCellDescriptor(coords.x, coords.y, self_descriptor);
+    }
+
+    public Set<Vec2i> getAliveEntities(List<Vec2i> entityPositions) {
+        return entityPositions.stream()
+            .map(coords -> coords.subtract(topLeft))
+            .flatMap(coords -> IntStream.range(-1, 2)
+                .mapToObj(y_offset -> (int) y_offset)
+                .flatMap(y_offset -> IntStream.range(-1, 2)
+                    .mapToObj(x_offset -> (int) x_offset)
+                    .map(x_offset -> new Vec2i(coords.x + x_offset, coords.y + y_offset))
+                ).filter(offsetCoords -> (grid.getCellDescriptor(offsetCoords.x, offsetCoords.y) & 4) > 0)
+                .map(topLeft::add)
+            ).collect(Collectors.toSet());
     }
 
     public void prettyPrint() {
