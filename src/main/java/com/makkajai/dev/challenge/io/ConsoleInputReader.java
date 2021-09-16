@@ -1,12 +1,13 @@
 package com.makkajai.dev.challenge.io;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConsoleInputReader {
+public class ConsoleInputReader implements Closeable {
     
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -21,5 +22,10 @@ public class ConsoleInputReader {
             input.add(line);
         }
         return input;
+    }
+
+    @Override
+    public void close() throws IOException {
+        reader.close();
     }
 }

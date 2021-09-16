@@ -1,10 +1,9 @@
 package com.makkajai.dev.challenge;
 
-import com.makkajai.dev.challenge.ds.Vec2i;
-
 import java.util.HashSet;
 import java.util.List;
-import com.makkajai.dev.challenge.ds.HalfByteGrid;
+import com.makkajai.dev.challenge.ds.planar.HalfByteGrid;
+import com.makkajai.dev.challenge.ds.planar.Vec2i;
 
 public class Simulator {
 
