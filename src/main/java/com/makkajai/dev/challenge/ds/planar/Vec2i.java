@@ -1,4 +1,7 @@
 package com.makkajai.dev.challenge.ds.planar;
+
+import com.makkajai.dev.challenge.physics.ITransformable;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -9,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Vec2i {
+public class Vec2i implements ITransformable<Vec2i> {
     
     public int x;
     public int y;
@@ -20,22 +23,17 @@ public class Vec2i {
      * @param rhs the {@link Vec2i} to be added to this one
      * @return new {@link Vec2i} containing the sum
      */
-    public Vec2i add(Vec2i rhs) {
+    @Override
+    public Vec2i translate(Vec2i rhs) {
         return new Vec2i(this.x + rhs.x, this.y + rhs.y);
     }
 
-    /**
-     * Subtracts another {@link Vec2i} to this one and returns a new one.
-     * 
-     * @param rhs the {@link Vec2i} to be subtracted from this one.
-     * @return new {@link Vec2i} containing the different of the rhs Vector from this one.
-     */
-    public Vec2i subtract(Vec2i rhs) {
-        return new Vec2i(this.x - rhs.x, this.y - rhs.y);
+    public Vec2i negate() {
+        return new Vec2i(-this.x, -this.y);
     }
     
     @Override
     public String toString() {
-        return String.format("%d, %d", x, y);
+        return String.format("{x: %d, y: %d}", x, y);
     }
 }

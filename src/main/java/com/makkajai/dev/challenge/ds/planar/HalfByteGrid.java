@@ -24,6 +24,7 @@ public class HalfByteGrid {
     private char[][] cells; 
 
     public void clear() {
+        size.x = size.y = 0;
         cells = null;
     }
 
@@ -49,6 +50,10 @@ public class HalfByteGrid {
         cells = new char[size.y][size.x];
     }
 
+    public void createGrid(Vec2i size) throws IllegalArgumentException {
+        createGrid(size.x, size.y);
+    }
+
     /**
      * @param x_coord the x coordinate (inner array) of the cell in the grid
      * @param y_coord the y coordinate (outer array) of the cell in the grid
@@ -56,6 +61,10 @@ public class HalfByteGrid {
      */
     public int getCell(int x_coord, int y_coord) {
         return (cells[y_coord][x_coord >> 1] >> (4 * (x_coord & 1))) & 0xF;
+    }
+
+    public int getCell(Vec2i coords) {
+        return getCell(coords.x, coords.y);
     }
 
     /**
@@ -69,6 +78,10 @@ public class HalfByteGrid {
         } else {
             cells[y_coord][x_coord >> 1] = (char) ((value & 0xF) | (cells[y_coord][x_coord >> 1] & 0xF0));
         }
+    }
+
+    public void setCell(Vec2i coords, int value) {
+        setCell(coords.x, coords.y, value);
     }
 
     /**

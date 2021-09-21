@@ -20,7 +20,7 @@ public class TextParser {
      * coordinates.
      * 
      * @param rawCoordinateStrings the raw strings containing the coordinate data.
-     *          It is expected to b in the form of "x_coordinate, y_Coordinate".
+     *          It is expected to be in the form of "x_coordinate, y_Coordinate".
      * @return the list of cartsian coordinates as
      *         {@link com.makkajai.dev.challenge.ds.planar.Vec2i}
      * @throws IOException in case it tries to parse an invalid raw coordinate sting

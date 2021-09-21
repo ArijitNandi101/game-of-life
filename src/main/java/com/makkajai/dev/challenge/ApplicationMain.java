@@ -1,12 +1,13 @@
 package com.makkajai.dev.challenge;
 
+import com.makkajai.dev.challenge.ds.planar.Vec2i;
+import com.makkajai.dev.challenge.io.ConsoleInputReader;
+import com.makkajai.dev.challenge.main.Simulator;
+import com.makkajai.dev.challenge.parsers.TextParser;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
-
-import com.makkajai.dev.challenge.ds.planar.Vec2i;
-import com.makkajai.dev.challenge.io.ConsoleInputReader;
-import com.makkajai.dev.challenge.parsers.TextParser;
 
 import lombok.extern.java.Log;
 
@@ -18,6 +19,7 @@ import lombok.extern.java.Log;
  */
 @Log
  public class ApplicationMain {
+     
     public static void main( String[] args )
     {
 
@@ -39,6 +41,9 @@ import lombok.extern.java.Log;
         }
         
         // ticks (updates) the world once and displays the new alive entity coordinates
-        gameOfLife.tick(coordinates).stream().forEach(System.out::println);
+        gameOfLife.seed(coordinates);
+
+        gameOfLife.tick();
+        gameOfLife.render();
     }
 }
