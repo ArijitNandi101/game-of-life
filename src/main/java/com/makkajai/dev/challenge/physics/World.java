@@ -30,6 +30,10 @@ public class World<T extends IEntity> {
 
     private Map<UUID, T> entities = new HashMap();
 
+    public World() {
+        this.resetBounds();
+    }
+
     /**
      * Update the minimum bounds of the frid on both axes. The minimum bounds are computed 
      * such that there is enough space to store all alive entities before and after the update. 
@@ -40,8 +44,16 @@ public class World<T extends IEntity> {
      *          grid bounds. This is used to upadate the minimum bounds.
      */
     void expandBounds(Vec2i entityPosition) {
-        topLeft = new Vec2i(Math.min(topLeft.x, entityPosition.x - 1), Math.min(topLeft.y, entityPosition.y - 1));
-        bottomRight = new Vec2i(Math.max(bottomRight.x, entityPosition.x + 1),Math.max(bottomRight.y, entityPosition.y + 1));
+        topLeft.x = Math.min(topLeft.x, entityPosition.x - 1);
+        topLeft.y = Math.min(topLeft.y, entityPosition.y - 1);
+
+        bottomRight.x = Math.max(bottomRight.x, entityPosition.x + 1);
+        bottomRight.y = Math.max(bottomRight.y, entityPosition.y + 1);
+    }
+
+    void resetBounds() {
+        topLeft.x = topLeft.y = Integer.MAX_VALUE;
+        bottomRight.x = bottomRight.y = Integer.MIN_VALUE;
     }
 
     public int getXBoundRange() {
@@ -50,11 +62,6 @@ public class World<T extends IEntity> {
 
     public int getYBoundRange() {
         return bottomRight.y - topLeft.y + 1;
-    }
-
-    void resetBounds() {
-        topLeft.x = topLeft.y = Integer.MAX_VALUE;
-        bottomRight.x = bottomRight.y = Integer.MIN_VALUE;
     }
 
     public void addEntity(T entity) {

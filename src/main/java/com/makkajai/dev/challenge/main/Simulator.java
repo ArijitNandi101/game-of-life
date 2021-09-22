@@ -91,7 +91,7 @@ public class Simulator {
             .forEach(System.out::println);
     }
 
-    public Stream<Vec2i> getAliveEntityPositionStream() {
+    Stream<Vec2i> getAliveEntityPositionStream() {
         return this.world.getEntities().stream()
             .map(GOLEntity::getPosition);
     }
@@ -104,7 +104,7 @@ public class Simulator {
      * @param entityPosition The position of th currently alive entity which will update the
      *              a portion of the world immediately surrounding it.
      */
-    void updateGrid(GOLEntity entity) {
+    private void updateGrid(GOLEntity entity) {
         Vec2i gridCoords = this.worldToGridTransformer.transform(entity.getPosition());
         // we get the current entity's state descriptor from the grid for updation.
         GOLSelfDescriptor self_descriptor = new GOLSelfDescriptor(grid.getCell(gridCoords));
@@ -175,7 +175,7 @@ public class Simulator {
     /**
      * Prints the grid as a rectangle along with the entity descriptors
      */
-    private void prettyPrintGrid() {                                  
+    void prettyPrintGrid() {                                  
         grid.print(x -> 
             // currently alive status
             (x & 8) 

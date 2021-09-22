@@ -1,8 +1,6 @@
 target
-.classpath
-.project
 .settings/
-.vscode
+.vscode/
 .settings
 .apt_generated*
-.factorypath
+.idea/

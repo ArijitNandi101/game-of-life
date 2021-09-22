@@ -10,11 +10,9 @@ import com.makkajai.dev.challenge.ds.planar.Vec2i;
 import com.makkajai.dev.challenge.systems.entitySystem.IEntity;
 
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@NoArgsConstructor
 @EqualsAndHashCode
 @Getter
 public class GOLEntity implements IEntity, Serializable {
@@ -27,6 +25,10 @@ public class GOLEntity implements IEntity, Serializable {
         this.position = position;
         this.id = UUID.nameUUIDFromBytes(position.toString().getBytes());
         this.neighbourPositions = this.computeNeighbourPositions();
+    }
+
+    public GOLEntity(int positionX, int positionY) {
+        this(new Vec2i(positionX, positionY));
     }
 
     private List<Vec2i> computeNeighbourPositions() {

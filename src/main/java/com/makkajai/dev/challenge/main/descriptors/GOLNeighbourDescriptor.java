@@ -1,13 +1,10 @@
 package com.makkajai.dev.challenge.main.descriptors;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@AllArgsConstructor
-@Getter
 public class GOLNeighbourDescriptor extends GOLDescriptor {
-    
-    private int value;
+
+    public GOLNeighbourDescriptor(int value) {
+        super(value);
+    }
 
     /**
      * This method is used to update the 4 bit entity state valuepritor of a
