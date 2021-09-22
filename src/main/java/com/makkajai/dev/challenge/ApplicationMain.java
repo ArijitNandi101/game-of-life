@@ -40,10 +40,11 @@ import lombok.extern.java.Log;
             System.exit(1);
         }
         
-        // ticks (updates) the world once and displays the new alive entity coordinates
+        // provides the seed values to the simulator for the simulation to begin.
         gameOfLife.seed(coordinates);
-
+        // ticks (updates) the world once
         gameOfLife.tick();
+        // displays the new alive entity coordinates
         gameOfLife.render();
     }
 }

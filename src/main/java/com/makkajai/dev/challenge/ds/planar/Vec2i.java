@@ -13,8 +13,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class Vec2i implements ITransformable<Vec2i> {
-    
+
+    /**
+     * the positional value in the x-axis (usually horizontal increasing rightwards)
+     */
     public int x;
+
+    /**
+     * the positional value in the x-axis (usually vertical increasing downwards)
+     */
     public int y;
 
     /**
@@ -28,6 +35,12 @@ public class Vec2i implements ITransformable<Vec2i> {
         return new Vec2i(this.x + rhs.x, this.y + rhs.y);
     }
 
+    /**
+     * negates the signs of the coordinate values (x, y) of this {@link Vec2i}.
+     *
+     * @return new {@link Vec2i} which is of th same length as this vector but
+     * opposite in direction.
+     */
     public Vec2i negate() {
         return new Vec2i(-this.x, -this.y);
     }

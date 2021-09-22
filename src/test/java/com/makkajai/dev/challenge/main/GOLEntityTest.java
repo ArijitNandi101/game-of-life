@@ -14,7 +14,7 @@ public class GOLEntityTest {
    
     @Test
     void testConstructor() {
-        GOLEntity entity = new GOLEntity(10, -5);
+        GOLEntity2D entity = new GOLEntity2D(10, -5);
         assertEquals(UUID.nameUUIDFromBytes("{x: 10, y: -5}".getBytes()), entity.getId());
         assertEquals(new Vec2i(10, -5), entity.getPosition());
 
@@ -34,7 +34,7 @@ public class GOLEntityTest {
 
     @Test
     void testConstructorVec2i() {
-        GOLEntity entity = new GOLEntity(new Vec2i(10, -5));
+        GOLEntity2D entity = new GOLEntity2D(new Vec2i(10, -5));
         assertEquals(UUID.nameUUIDFromBytes(new Vec2i(10, -5).toString().getBytes()), entity.getId());
         assertEquals(new Vec2i(10, -5), entity.getPosition());
 
@@ -56,22 +56,22 @@ public class GOLEntityTest {
     void testToString() {
         assertEquals(
             String.format("{id: %s, position: %s }",UUID.nameUUIDFromBytes(new Vec2i(10, -5).toString().getBytes()), new Vec2i(10, -5)),
-            new GOLEntity(10, -5).toString()
+            new GOLEntity2D(10, -5).toString()
         );
     }
 
     @Test
     void testEquals() {
-        assertTrue(new GOLEntity(10, -5).equals(new GOLEntity(10, -5)));
-        assertFalse(new GOLEntity(10, -5).equals(new GOLEntity(10, 5)));
-        assertFalse(new GOLEntity(10, -5).equals(new GOLEntity(-10, -5)));
+        assertTrue(new GOLEntity2D(10, -5).equals(new GOLEntity2D(10, -5)));
+        assertFalse(new GOLEntity2D(10, -5).equals(new GOLEntity2D(10, 5)));
+        assertFalse(new GOLEntity2D(10, -5).equals(new GOLEntity2D(-10, -5)));
     }
 
     @Test
     void testHashCode() {
-        assertEquals(new GOLEntity(10, -5).hashCode(), new GOLEntity(10, -5).hashCode());
-        assertNotEquals(new GOLEntity(10, -5).hashCode(), new GOLEntity(10, 5).hashCode());
-        assertNotEquals(new GOLEntity(10, -5).hashCode(), new GOLEntity(-10, -5).hashCode());
+        assertEquals(new GOLEntity2D(10, -5).hashCode(), new GOLEntity2D(10, -5).hashCode());
+        assertNotEquals(new GOLEntity2D(10, -5).hashCode(), new GOLEntity2D(10, 5).hashCode());
+        assertNotEquals(new GOLEntity2D(10, -5).hashCode(), new GOLEntity2D(-10, -5).hashCode());
     }
 
 }

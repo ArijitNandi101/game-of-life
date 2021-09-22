@@ -21,8 +21,12 @@ public class HalfByteGrid {
      * A 0 index 2D grid of half byte cells internally represented as a 2D array of chars.
      */
     @Getter(AccessLevel.PACKAGE)
-    private char[][] cells; 
+    private char[][] cells;
 
+    /**
+     * clears the grid data (releases the acquired memory) and sets the size of the
+     * grid to 0.
+     */
     public void clear() {
         size.x = size.y = 0;
         cells = null;
@@ -34,7 +38,7 @@ public class HalfByteGrid {
      * 
      * @param x_size the size of the grid in the x-axis
      * @param y_size the size of the grid in the y-axis
-     * @throws IllegalArgumentException in cases the x or y axis size provided
+     * @throws IllegalArgumentException in cases the x-axis or y-axis size provided
      * is negative or zero.
      */
     public void createGrid(int x_size, int y_size) throws IllegalArgumentException {
@@ -50,19 +54,32 @@ public class HalfByteGrid {
         cells = new char[size.y][size.x];
     }
 
+    /**
+     * Overload for {@link #createGrid(int, int)}
+     *
+     * @param size A {@link Vec2i} describing the size of the grid in its (x, y) coordinates.
+     * @throws IllegalArgumentException in case the vector has a negative coordinate.
+     */
     public void createGrid(Vec2i size) throws IllegalArgumentException {
         createGrid(size.x, size.y);
     }
 
     /**
-     * @param x_coord the x coordinate (inner array) of the cell in the grid
-     * @param y_coord the y coordinate (outer array) of the cell in the grid
-     * @return the 4 bits of a single cell in the grid as an int
+     * @param x_coord the x coordinate (inner array) of the cell in the grid.
+     * @param y_coord the y coordinate (outer array) of the cell in the grid.
+     * @return the 4 bits of a single cell in the grid as an int.
      */
     public int getCell(int x_coord, int y_coord) {
         return (cells[y_coord][x_coord >> 1] >> (4 * (x_coord & 1))) & 0xF;
     }
 
+    /**
+     * Overload for {@link #getCell(int, int)} that takes the cell coordinates as
+     * a {@link Vec2i}.
+     *
+     * @param coords {@link Vec2i} describing the x and y coordinates of the cell.
+     * @return the 4 bit value present in the cell as an int.
+     */
     public int getCell(Vec2i coords) {
         return getCell(coords.x, coords.y);
     }
@@ -80,6 +97,13 @@ public class HalfByteGrid {
         }
     }
 
+    /**
+     * Overload for {@link #setCell(int, int, int)} that takes the cell coordinates as
+     * a {@link Vec2i}.
+     *
+     * @param coords {@link Vec2i} describing the x and y coordinates of the cell.
+     * @param value a integer whose only lowest 4 bits will be set as the value of the cell
+     */
     public void setCell(Vec2i coords, int value) {
         setCell(coords.x, coords.y, value);
     }

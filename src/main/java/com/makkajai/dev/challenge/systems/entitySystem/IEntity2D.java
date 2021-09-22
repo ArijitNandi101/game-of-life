@@ -4,7 +4,11 @@ import com.makkajai.dev.challenge.ds.planar.Vec2i;
 
 import java.util.UUID;
 
-public interface IEntity {
+/**
+ * Represents the behaviors of a 2 dimensional Entity described by its id
+ * and its position on a 2 dimensional (x, y) plane.
+ */
+public interface IEntity2D {
 
     UUID getId();
 
