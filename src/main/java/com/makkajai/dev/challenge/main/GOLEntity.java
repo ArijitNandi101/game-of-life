@@ -3,11 +3,11 @@ package com.makkajai.dev.challenge.main;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 import com.makkajai.dev.challenge.ds.planar.Vec2i;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +19,6 @@ import lombok.Setter;
  * The entity also contains references to its neighbours that exist in the
  * Game of Life world.
  */
-@EqualsAndHashCode
 public class GOLEntity implements Serializable {
 
     /**
@@ -152,6 +151,21 @@ public class GOLEntity implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("{id: %s, position: %s }", this.id, this.position);
+        return String.format("{id: %s, position: %s, state: %s}", this.id, this.position, this.state);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof GOLEntity))
+            return false;
+        GOLEntity other = (GOLEntity) o;
+        return this.id.equals(other.id);
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(this.id, this.position);
     }
 }
